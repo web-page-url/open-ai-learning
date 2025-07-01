@@ -1,0 +1,37 @@
+{
+  "name": "GitHub Copilot Learning Platform",
+  "short_name": "Copilot Learning",
+  "description": "Professional GitHub Copilot Training with Real-time Analytics and Certification",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3B82F6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/images/icons/co-pilot-1.0.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/icons/co-pilot-1.0.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/icons/co-pilot-1.0.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "32x32",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["education", "productivity", "developer-tools"],
+  "lang": "en-US",
+  "dir": "ltr"
+} 

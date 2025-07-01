@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://your-domain.com/sitemap.xml
+
+# Crawl delay (optional, in seconds)
+Crawl-delay: 1
+
+# Disallow admin areas for security
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /api/admin/
+
+# Allow specific important sections
+Allow: /login
+Allow: /register
+Allow: /learning
+Allow: /section-*
+Allow: /my-scores 
