@@ -1,4 +1,4 @@
--- Essential Database Schema for GitHub Copilot Learning Platform
+-- Essential Database Schema for OpenAI Learning Platform
 -- Run this in your Supabase SQL editor
 
 -- Enable UUID extension

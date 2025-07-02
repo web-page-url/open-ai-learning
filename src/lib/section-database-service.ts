@@ -482,14 +482,10 @@ export class SectionDatabaseService {
 
       console.log('📚 Existing sections:', existingSections?.map((s: any) => s.section_number) || []);
 
-      // Define the sections we need - Updated for GitHub Copilot topics
+      // Define the sections we need - Updated for OpenAI topics
       const requiredSections = [
-        { section_number: 1, title: 'What is GitHub Copilot?', slug: 'what-is-github-copilot', description: 'Understanding GitHub Copilot as an AI pair programmer' },
-        { section_number: 2, title: 'Key Features and Plans', slug: 'key-features-and-plans', description: 'Exploring GitHub Copilot\'s features and subscription options' },
-        { section_number: 3, title: 'Working with VS Code', slug: 'working-with-vs-code', description: 'Using GitHub Copilot effectively in Visual Studio Code' },
-        { section_number: 4, title: 'Framework-Specific Support', slug: 'framework-specific-support', description: 'How GitHub Copilot works with different frameworks' },
-        { section_number: 5, title: 'Responsible Use and Limitations', slug: 'responsible-use-and-limitations', description: 'Understanding responsible AI practices with GitHub Copilot' },
-        { section_number: 6, title: 'Hands-On Examples Overview', slug: 'hands-on-examples-overview', description: 'Practical examples of using GitHub Copilot' }
+        { section_number: 1, title: 'Introduction to OpenAI', slug: 'introduction-to-openai', description: 'Understanding OpenAI, its mission, and core AI technologies' },
+        { section_number: 2, title: 'OpenAI Applications and Use Cases', slug: 'openai-applications-and-use-cases', description: 'Exploring practical applications and real-world uses of OpenAI technologies' }
       ];
 
       const existingNumbers = new Set(existingSections?.map((s: any) => s.section_number) || []);
@@ -577,7 +573,7 @@ export class SectionDatabaseService {
     }
   }
 
-  // Update sections with new GitHub Copilot titles (call this to fix admin dashboard)
+  // Update sections with new OpenAI titles (call this to fix admin dashboard)
   static async updateSectionTitles(): Promise<boolean> {
     if (!this.isAvailable()) {
       console.log('Database not available');
@@ -585,16 +581,12 @@ export class SectionDatabaseService {
     }
 
     try {
-      console.log('🔄 Updating section titles to GitHub Copilot topics...');
+      console.log('🔄 Updating section titles to OpenAI topics...');
       
-      // Updated section titles for GitHub Copilot
+      // Updated section titles for OpenAI
       const updatedSections = [
-        { section_number: 1, title: 'What is GitHub Copilot?', description: 'Understanding GitHub Copilot as an AI pair programmer' },
-        { section_number: 2, title: 'Key Features and Plans', description: 'Exploring GitHub Copilot\'s features and subscription options' },
-        { section_number: 3, title: 'Working with VS Code', description: 'Using GitHub Copilot effectively in Visual Studio Code' },
-        { section_number: 4, title: 'Framework-Specific Support', description: 'How GitHub Copilot works with different frameworks' },
-        { section_number: 5, title: 'Responsible Use and Limitations', description: 'Understanding responsible AI practices with GitHub Copilot' },
-        { section_number: 6, title: 'Hands-On Examples Overview', description: 'Practical examples of using GitHub Copilot' }
+        { section_number: 1, title: 'Introduction to OpenAI', description: 'Understanding OpenAI, its mission, and core AI technologies' },
+        { section_number: 2, title: 'OpenAI Applications and Use Cases', description: 'Exploring practical applications and real-world uses of OpenAI technologies' }
       ];
 
       for (const section of updatedSections) {

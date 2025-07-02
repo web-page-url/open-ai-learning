@@ -205,10 +205,6 @@ export default function CertificateGenerator({
                 <div class="detail-value">${cert.score}%</div>
               </div>
               <div class="detail-item">
-                <div class="detail-label">Duration</div>
-                <div class="detail-value">${Math.round(cert.duration)} minutes</div>
-              </div>
-              <div class="detail-item">
                 <div class="detail-label">Completion Date</div>
                 <div class="detail-value">${cert.completionTime.toLocaleDateString()}</div>
               </div>
@@ -224,8 +220,8 @@ export default function CertificateGenerator({
           <div class="signature-section">
             <div class="signature">
               <div class="signature-line"></div>
-              <div style="font-weight: bold; margin-bottom: 5px;">Learning Platform</div>
-              <div class="date">Automated Certification System</div>
+              <div style="font-weight: bold; margin-bottom: 5px;">Anubhav Chaudhary</div>
+              <div class="date">Instructor</div>
             </div>
             <div style="text-align: center;">
               <div style="width: 100px; height: 100px; border: 3px solid #3498db; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #3498db; font-weight: bold;">
@@ -277,10 +273,6 @@ export default function CertificateGenerator({
         <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700">
           <span className="text-gray-600 dark:text-gray-400">Score:</span>
           <span className="font-semibold text-green-600">{sessionData.score}%</span>
-        </div>
-        <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700">
-          <span className="text-gray-600 dark:text-gray-400">Duration:</span>
-          <span className="font-semibold text-gray-900 dark:text-white">{Math.round(sessionData.duration)} min</span>
         </div>
         <div className="flex justify-between items-center py-2">
           <span className="text-gray-600 dark:text-gray-400">Date:</span>

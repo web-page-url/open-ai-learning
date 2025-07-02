@@ -17,7 +17,7 @@ export default function Home() {
                 </div>
               <div>
                 <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-                  GitHub Copilot Learning
+                  OpenAI Learning
                   </h1>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   2 Sections • 8 Questions • Dashboard Analytics
@@ -51,10 +51,10 @@ export default function Home() {
         {/* Hero Section */}
           <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            Master GitHub Copilot
+            Master OpenAI Technologies
           </h2>
           <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Complete 10 focused sections with 2 questions each. 
+            Complete 2 focused sections with 4 questions each. 
             Track your progress and view analytics on the dashboard.
           </p>
           <div className="mt-6 flex justify-center items-center space-x-6 text-sm text-gray-500 dark:text-gray-400">
@@ -175,7 +175,7 @@ export default function Home() {
       <footer className="mt-16 bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center text-sm text-gray-600 dark:text-gray-400">
-            <p>© 2025 GitHub Copilot Learning Platform. All rights reserved.</p>
+            <p>© 2025 OpenAI Learning Platform. All rights reserved.</p>
             <div className="mt-2 space-x-4">
 
               <Link href="/login" className="hover:text-gray-900 dark:hover:text-white">Login</Link>

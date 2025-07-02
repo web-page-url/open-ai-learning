@@ -23,6 +23,12 @@ export function UserGreeting() {
   const handleLogout = () => {
     UserSession.logout();
     setUser(null);
+    // Dispatch storage event to update other components
+    window.dispatchEvent(new StorageEvent('storage', {
+      key: 'currentUser',
+      newValue: null,
+      oldValue: JSON.stringify(user)
+    }));
     // Optionally redirect to home or refresh page
     window.location.reload();
   };

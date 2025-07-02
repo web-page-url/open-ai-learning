@@ -1,13 +1,50 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { UserSession } from '@/lib/user-session';
 
 export default function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userName, setUserName] = useState<string | null>(null);
+
+  useEffect(() => {
+    const checkLoginStatus = () => {
+      const loggedIn = UserSession.isLoggedIn();
+      const user = UserSession.getCurrentUser();
+      setIsLoggedIn(loggedIn);
+      setUserName(user?.name || null);
+    };
+
+    checkLoginStatus();
+    
+    // Listen for storage changes (when login/logout happens in other tabs)
+    const handleStorageChange = () => {
+      checkLoginStatus();
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
 
   const isActive = (path: string) => {
     return pathname === path;
+  };
+
+  const handleLogout = () => {
+    UserSession.logout();
+    setIsLoggedIn(false);
+    setUserName(null);
+    // Dispatch storage event to update other components
+    window.dispatchEvent(new StorageEvent('storage', {
+      key: 'currentUser',
+      newValue: null,
+      oldValue: null
+    }));
+    router.push('/');
   };
 
   return (
@@ -31,6 +68,13 @@ export default function Navbar() {
           {/* Navigation Links */}
           <div className="flex items-center space-x-8">
             
+            {/* Show user name when logged in */}
+            {isLoggedIn && userName && (
+              <span className="text-gray-300 text-sm">
+                Welcome, {userName}
+              </span>
+            )}
+            
             <Link
               href="/my-scores"
               className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
@@ -43,15 +87,47 @@ export default function Navbar() {
             </Link>
             
             <Link
-              href="/login"
+              href="/reviews"
               className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-                isActive('/login')
+                isActive('/reviews')
                   ? 'bg-blue-600 text-white border border-blue-500'
                   : 'text-gray-300 hover:text-white hover:bg-gray-800'
               }`}
             >
-              Login
+              ⭐ Reviews
             </Link>
+            
+            <Link
+              href="/admin-reviews"
+              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                isActive('/admin-reviews')
+                  ? 'bg-blue-600 text-white border border-blue-500'
+                  : 'text-gray-300 hover:text-white hover:bg-gray-800'
+              }`}
+            >
+              📊 Dashboard
+            </Link>
+            
+            {/* Conditional Login/Logout */}
+            {isLoggedIn ? (
+              <button
+                onClick={handleLogout}
+                className="px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 text-gray-300 hover:text-white hover:bg-gray-800"
+              >
+                Logout
+              </button>
+            ) : (
+              <Link
+                href="/login"
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                  isActive('/login')
+                    ? 'bg-blue-600 text-white border border-blue-500'
+                    : 'text-gray-300 hover:text-white hover:bg-gray-800'
+                }`}
+              >
+                Login
+              </Link>
+            )}
             
             <Link
               href="/"

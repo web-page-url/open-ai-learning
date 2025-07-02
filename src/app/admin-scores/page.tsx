@@ -11,7 +11,7 @@ const AdminAuthGuard = ({ children }: { children: React.ReactNode }) => {
   const [error, setError] = useState('');
 
   // Static admin password - you can change this
-  const ADMIN_PASSWORD = 'CopilotAdmin2025!';
+  const ADMIN_PASSWORD = 'OpenAIAdmin2025!';
   const AUTH_STORAGE_KEY = 'admin-auth-token';
 
   useEffect(() => {

@@ -26,7 +26,7 @@ You need to create the database tables in your Supabase dashboard.
 
 ### 4. Check Admin Dashboard
 - Go to `http://localhost:3001/admin-scores`
-- Enter password: `CopilotAdmin2025!`
+- Enter password: `OpenAIAdmin2025!`
 - You should now see user data
 
 ## What the SQL Creates:

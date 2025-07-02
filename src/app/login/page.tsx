@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { SectionsService } from '@/lib/sections-service';
@@ -11,7 +11,28 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [checkingSession, setCheckingSession] = useState(true);
   const router = useRouter();
+
+  // Check if user is already logged in on component mount
+  useEffect(() => {
+    const checkExistingSession = () => {
+      try {
+        if (UserSession.isLoggedIn()) {
+          const currentUser = UserSession.getCurrentUser();
+          console.log('User already logged in:', currentUser?.name);
+          router.push('/'); // Redirect to home if already logged in
+          return;
+        }
+      } catch (error) {
+        console.error('Error checking existing session:', error);
+      } finally {
+        setCheckingSession(false);
+      }
+    };
+
+    checkExistingSession();
+  }, [router]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,19 +75,33 @@ export default function LoginPage() {
     }
   };
 
+  // Show loading while checking existing session
+  if (checkingSession) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center px-4">
+        <div className="text-center">
+          <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+          </div>
+          <p className="text-gray-600 dark:text-gray-400">Checking login status...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center px-4">
       <div className="max-w-md w-full space-y-8">
         {/* Header */}
         <div className="text-center">
           <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4">
-            <span className="text-white text-2xl font-bold">G</span>
+            <span className="text-white text-2xl font-bold">O</span>
           </div>
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
             Welcome Back
           </h2>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Enter your details to access GitHub Copilot Learning
+                            Enter your details to access OpenAI Learning
           </p>
         </div>
 

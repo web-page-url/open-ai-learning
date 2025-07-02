@@ -658,7 +658,7 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
             font-family: 'Courier New', monospace;
           }
           
-          .github-copilot-badge {
+          .openai-badge {
             background: linear-gradient(135deg, #24292e 0%, #586069 100%);
             color: white;
             padding: 8px 16px;
@@ -687,7 +687,7 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
             <div class="header">
               <div class="logo">🎓</div>
               <div class="title">CERTIFICATE OF COMPLETION</div>
-              <div class="subtitle">GitHub Copilot Learning Platform</div>
+              <div class="subtitle">OpenAI Learning Platform</div>
               <div class="section-badge">Section ${sectionNumber} Achievement</div>
             </div>
             
@@ -701,7 +701,7 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
               has successfully completed
             </div>
             
-            <div class="course-title">${sectionInfo?.title || `GitHub Copilot Section ${sectionNumber}`}</div>
+            <div class="course-title">${sectionInfo?.title || `OpenAI Section ${sectionNumber}`}</div>
             
             <div class="achievement-details">
               <div class="detail-item">
@@ -727,22 +727,22 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
               ${accuracy >= 80 ? '<span class="achievement">🎯 High Performance</span>' : ''}
               ${accuracy >= 70 ? '<span class="achievement">✅ Proficient Completion</span>' : ''}
               <span class="achievement">📚 Section ${sectionNumber} Mastery</span>
-              <span class="achievement">🤖 GitHub Copilot Knowledge</span>
+              <span class="achievement">🤖 OpenAI Knowledge</span>
             </div>
             
             <div class="completion-statement">
-              This certificate validates the successful completion of Section ${sectionNumber} of our comprehensive GitHub Copilot training program. The recipient has demonstrated proficiency in AI-powered development concepts and practical application skills.
+              This certificate validates the successful completion of Section ${sectionNumber} of our comprehensive OpenAI training program. The recipient has demonstrated proficiency in AI concepts and practical application skills.
             </div>
             
-            <div class="github-copilot-badge">
-              🤖 Powered by GitHub Copilot Learning Platform
+            <div class="openai-badge">
+              🤖 Powered by OpenAI Learning Platform
             </div>
             
             <div class="signature-section">
               <div class="signature">
                 <div class="signature-line"></div>
-                <div class="signature-title">Learning Platform</div>
-                <div class="signature-subtitle">Automated Certification System</div>
+                <div class="signature-title">Anubhav Chaudhary</div>
+                <div class="signature-subtitle">Instructor</div>
               </div>
               
               <div class="verification-seal">
@@ -775,7 +775,7 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `GitHub-Copilot-Section-${sectionNumber}-Certificate-${participantName.replace(/\s+/g, '-')}.html`;
+    a.download = `OpenAI-Section-${sectionNumber}-Certificate-${participantName.replace(/\s+/g, '-')}.html`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -1382,10 +1382,6 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
               </div>
               
               <div className="text-right">
-                <div className="text-sm text-gray-500 dark:text-gray-400">Duration</div>
-                <div className="text-lg font-semibold text-gray-900 dark:text-white">
-                  ~{sectionInfo.duration} minutes
-                </div>
                 <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                   {questions.length} questions
                 </div>

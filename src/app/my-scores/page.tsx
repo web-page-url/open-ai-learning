@@ -243,7 +243,7 @@ export default function MyScoresPage() {
       <html>
       <head>
         <meta charset="UTF-8">
-        <title>GitHub Copilot Master Certificate - ${participantName}</title>
+        <title>OpenAI Master Certificate - ${participantName}</title>
         <style>
           @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap');
           
@@ -531,7 +531,7 @@ export default function MyScoresPage() {
             font-family: 'Courier New', monospace;
           }
           
-          .github-badge {
+          .openai-main-badge {
             background: linear-gradient(135deg, #24292e 0%, #586069 100%);
             color: white;
             padding: 10px 20px;
@@ -561,8 +561,8 @@ export default function MyScoresPage() {
             <div class="header">
               <div class="master-badge">🏆</div>
               <div class="title">MASTER CERTIFICATE</div>
-              <div class="subtitle">GitHub Copilot Learning Platform</div>
-              <div class="master-title">AI-Powered Development Mastery</div>
+              <div class="subtitle">OpenAI Learning Platform</div>
+              <div class="master-title">AI Technology Mastery</div>
             </div>
             
             <div class="certification-text">
@@ -578,7 +578,7 @@ export default function MyScoresPage() {
             <div class="course-title">${courseTitle}</div>
             
             <div class="mastery-statement">
-              "Demonstrating exceptional proficiency in AI-assisted software development, modern coding practices, and GitHub Copilot mastery across all 6 specialized learning modules."
+              "Demonstrating exceptional proficiency in artificial intelligence technologies, practical AI applications, and OpenAI mastery across all 2 specialized learning modules."
             </div>
             
             <div class="achievement-grid">
@@ -590,42 +590,37 @@ export default function MyScoresPage() {
               <div class="achievement-item">
                 <div class="achievement-icon">📚</div>
                 <div class="achievement-label">Sections Mastered</div>
-                <div class="achievement-value">6/6</div>
+                <div class="achievement-value">2/2</div>
               </div>
               <div class="achievement-item">
                 <div class="achievement-icon">❓</div>
                 <div class="achievement-label">Questions Answered</div>
                 <div class="achievement-value">${overallStats.totalQuestionsAnswered}</div>
               </div>
-              <div class="achievement-item">
-                <div class="achievement-icon">⏱️</div>
-                <div class="achievement-label">Study Time</div>
-                <div class="achievement-value">${Math.floor(overallStats.totalTimeSpent / 60)}m</div>
-              </div>
             </div>
             
             <div class="skills-mastered">
-              <span class="skill-badge">🤖 GitHub Copilot Fundamentals</span>
-              <span class="skill-badge">⚙️ Feature Mastery</span>
-              <span class="skill-badge">💻 VS Code Integration</span>
-              <span class="skill-badge">🔧 Framework Capabilities</span>
+              <span class="skill-badge">🤖 OpenAI Fundamentals</span>
+              <span class="skill-badge">⚙️ AI Model Mastery</span>
+              <span class="skill-badge">💻 Practical Applications</span>
+              <span class="skill-badge">🔧 Use Case Development</span>
               <span class="skill-badge">🛡️ Responsible AI</span>
-              <span class="skill-badge">🛠️ Practical Applications</span>
+              <span class="skill-badge">🛠️ Real-world Implementation</span>
             </div>
             
             <div class="certification-statement">
-              <strong>This Master Certificate</strong> validates comprehensive understanding and practical application of GitHub Copilot across all learning domains. The recipient has demonstrated expertise in AI-assisted development, ethical AI practices, and modern software engineering workflows. This certification represents dedication to continuous learning and mastery of cutting-edge development tools.
+              <strong>This Master Certificate</strong> validates comprehensive understanding and practical application of OpenAI technologies across all learning domains. The recipient has demonstrated expertise in AI applications, ethical AI practices, and modern artificial intelligence implementations. This certification represents dedication to continuous learning and mastery of cutting-edge AI technologies.
             </div>
             
-            <div class="github-badge">
-              🤖 Powered by GitHub Copilot Learning Platform • Professional Certification
+            <div class="openai-main-badge">
+              🤖 Powered by OpenAI Learning Platform • Professional Certification
             </div>
             
             <div class="signature-section">
               <div class="signature">
                 <div class="signature-line"></div>
-                <div class="signature-title">Learning Platform</div>
-                <div class="signature-subtitle">Automated Certification Authority</div>
+                <div class="signature-title">Anubhav Chaudhary</div>
+                <div class="signature-subtitle">Instructor</div>
               </div>
               
               <div class="verification-section">
@@ -658,14 +653,14 @@ export default function MyScoresPage() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `GitHub-Copilot-MASTER-Certificate-${participantName.replace(/\s+/g, '-')}.html`;
+    a.download = `OpenAI-MASTER-Certificate-${participantName.replace(/\s+/g, '-')}.html`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 
     // Show success message
-    alert(`🎉 MASTER CERTIFICATE DOWNLOADED!\n\nCongratulations ${participantName}!\n\nYour GitHub Copilot Master Certificate has been downloaded.\n\n✅ Ready for LinkedIn Profile\n✅ Portfolio Showcase\n✅ Professional Documentation\n\nYou can open the HTML file in any browser and print it as a PDF.`);
+    alert(`🎉 MASTER CERTIFICATE DOWNLOADED!\n\nCongratulations ${participantName}!\n\nYour OpenAI Master Certificate has been downloaded.\n\n✅ Ready for LinkedIn Profile\n✅ Portfolio Showcase\n✅ Professional Documentation\n\nYou can open the HTML file in any browser and print it as a PDF.`);
   };
 
   const handleLogout = () => {
@@ -1068,7 +1063,7 @@ export default function MyScoresPage() {
             font-family: 'Courier New', monospace;
           }
           
-          .github-copilot-badge {
+          .openai-badge {
             background: linear-gradient(135deg, #24292e 0%, #586069 100%);
             color: white;
             padding: 8px 16px;
@@ -1097,7 +1092,7 @@ export default function MyScoresPage() {
             <div class="header">
               <div class="logo">🎓</div>
               <div class="title">CERTIFICATE OF COMPLETION</div>
-              <div class="subtitle">GitHub Copilot Learning Platform</div>
+              <div class="subtitle">OpenAI Learning Platform</div>
               <div class="section-badge">Section ${sectionNumber}</div>
             </div>
             
@@ -1111,7 +1106,7 @@ export default function MyScoresPage() {
               has successfully completed
             </div>
             
-            <div class="course-title">${sectionInfo?.title || `GitHub Copilot Section ${sectionNumber}`}</div>
+            <div class="course-title">${sectionInfo?.title || `OpenAI Section ${sectionNumber}`}</div>
             
             <div class="achievement-details">
               <div class="detail-item">
@@ -1137,22 +1132,22 @@ export default function MyScoresPage() {
               ${completion.accuracy >= 80 ? '<span class="achievement">🎯 High Performance</span>' : ''}
               ${completion.accuracy >= 60 ? '<span class="achievement">✅ Certificate Earned</span>' : ''}
               <span class="achievement">📚 Section ${sectionNumber} Master</span>
-              <span class="achievement">🤖 GitHub Copilot Knowledge</span>
+              <span class="achievement">🤖 OpenAI Knowledge</span>
             </div>
             
             <div class="completion-statement">
-              This certificate validates the successful completion of Section ${sectionNumber} of our comprehensive GitHub Copilot training program. The recipient has demonstrated proficiency in AI-powered development concepts and practical application skills with ${completion.accuracy}% accuracy.
+              This certificate validates the successful completion of Section ${sectionNumber} of our comprehensive OpenAI training program. The recipient has demonstrated proficiency in AI concepts and practical application skills with ${completion.accuracy}% accuracy.
             </div>
             
-            <div class="github-copilot-badge">
-              🤖 Powered by GitHub Copilot Learning Platform
+            <div class="openai-badge">
+              🤖 Powered by OpenAI Learning Platform
             </div>
             
             <div class="signature-section">
               <div class="signature">
                 <div class="signature-line"></div>
-                <div class="signature-title">Learning Platform</div>
-                <div class="signature-subtitle">Automated Certification System</div>
+                <div class="signature-title">Anubhav Chaudhary</div>
+                <div class="signature-subtitle">Instructor</div>
               </div>
               
               <div class="verification-seal">
@@ -1185,7 +1180,7 @@ export default function MyScoresPage() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `GitHub-Copilot-Section-${sectionNumber}-Certificate-${participantName.replace(/\s+/g, '-')}.html`;
+    a.download = `OpenAI-Section-${sectionNumber}-Certificate-${participantName.replace(/\s+/g, '-')}.html`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -1378,10 +1373,6 @@ export default function MyScoresPage() {
                       <div className="bg-white/70 dark:bg-gray-800/70 rounded-lg p-3">
                         <div className="text-lg font-bold text-purple-600">{overallStats.totalQuestionsAnswered}</div>
                         <div className="text-xs text-gray-600 dark:text-gray-300">Total Questions</div>
-                      </div>
-                      <div className="bg-white/70 dark:bg-gray-800/70 rounded-lg p-3">
-                        <div className="text-lg font-bold text-orange-600">{Math.floor(overallStats.totalTimeSpent / 60)}m</div>
-                        <div className="text-xs text-gray-600 dark:text-gray-300">Study Time</div>
                       </div>
                     </div>
                     
@@ -1638,7 +1629,7 @@ export default function MyScoresPage() {
                     onClick={() => router.push('/section-1')}
                     className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
                   >
-                    Start Section 1: What is GitHub Copilot?
+                    Start Section 1: Introduction to OpenAI
                   </button>
                 </div>
               )}
