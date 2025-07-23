@@ -85,7 +85,7 @@ export function UserGreeting() {
         </span>
         <span className="flex items-center">
           <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
-          2 sections available
+          1 comprehensive section
         </span>
         <span className="flex items-center">
           <span className="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>

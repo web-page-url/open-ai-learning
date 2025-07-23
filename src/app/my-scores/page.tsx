@@ -216,8 +216,8 @@ export default function MyScoresPage() {
         console.log('❌ Master certificate requirements NOT met:', { 
           sections: totalSections, 
           accuracy: overallAccuracy,
-          needsSections: totalSections < 2, // Updated to 2 sections
-          needsAccuracy: overallAccuracy < 60 
+          needsSections: totalSections < 1, // Updated to 1 section
+          needsAccuracy: overallAccuracy < 80 
         });
       }
     }
@@ -578,7 +578,7 @@ export default function MyScoresPage() {
             <div class="course-title">${courseTitle}</div>
             
             <div class="mastery-statement">
-              "Demonstrating exceptional proficiency in artificial intelligence technologies, practical AI applications, and OpenAI mastery across all 2 specialized learning modules."
+              "Demonstrating exceptional proficiency in artificial intelligence technologies, practical AI applications, and comprehensive OpenAI mastery through rigorous assessment."
             </div>
             
             <div class="achievement-grid">
@@ -589,8 +589,8 @@ export default function MyScoresPage() {
               </div>
               <div class="achievement-item">
                 <div class="achievement-icon">📚</div>
-                <div class="achievement-label">Sections Mastered</div>
-                <div class="achievement-value">2/2</div>
+                <div class="achievement-label">Section Completed</div>
+                <div class="achievement-value">1/1</div>
               </div>
               <div class="achievement-item">
                 <div class="achievement-icon">❓</div>
@@ -1511,7 +1511,7 @@ export default function MyScoresPage() {
                     <span className="text-2xl">🎓</span>
                     <div>
                       <div className="font-semibold text-gray-900 dark:text-white">Master Graduate</div>
-                                                      <div className="text-sm text-gray-600 dark:text-gray-300">Complete all 2 sections + 60% accuracy</div>
+                                                      <div className="text-sm text-gray-600 dark:text-gray-300">Complete all Question + 90% accuracy</div>
                     </div>
                   </div>
                 </div>

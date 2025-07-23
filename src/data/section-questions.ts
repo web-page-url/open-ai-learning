@@ -16,17 +16,17 @@ export interface SectionData {
   title: string;
   description: string;
   difficulty: 'beginner' | 'intermediate' | 'advanced';
-  duration: number;
+  duration: number; 
   questions: Question[];
 }
 
 export const sectionData: Record<number, SectionData> = {
   1: {
     id: 1,
-    title: "Introduction to OpenAI",
-    description: "Understanding OpenAI, its mission, and core AI technologies",
-    difficulty: "beginner",
-    duration: 1,
+    title: "OpenAI Comprehensive Training",
+    description: "Complete guide to OpenAI technologies, applications, and practical implementations",
+    difficulty: "intermediate",
+    duration: 2,
     questions: [
       {
         id: "openai-1-1",
@@ -85,19 +85,9 @@ export const sectionData: Record<number, SectionData> = {
         timeLimit: 30,
         points: 1,
         category: "general"
-      }
-    ]
-  },
-
-  2: {
-    id: 2,
-    title: "OpenAI Applications and Use Cases",
-    description: "Exploring practical applications and real-world uses of OpenAI technologies",
-    difficulty: "intermediate",
-    duration: 1,
-    questions: [
+      },
       {
-        id: "openai-2-1",
+        id: "openai-1-5",
         question: "Which of the following is a primary use case for ChatGPT?",
         type: "multiple-choice",
         options: [
@@ -113,7 +103,7 @@ export const sectionData: Record<number, SectionData> = {
         category: "general"
       },
       {
-        id: "openai-2-2",
+        id: "openai-1-6",
         question: "What is DALL-E used for?",
         type: "multiple-choice",
         options: [
@@ -129,7 +119,7 @@ export const sectionData: Record<number, SectionData> = {
         category: "general"
       },
       {
-        id: "openai-2-3",
+        id: "openai-1-7",
         question: "OpenAI's models can be used for code generation and programming assistance.",
         type: "true-false",
         correctAnswer: "true",
@@ -139,7 +129,7 @@ export const sectionData: Record<number, SectionData> = {
         category: "general"
       },
       {
-        id: "openai-2-4",
+        id: "openai-1-8",
         question: "Which industry has NOT commonly adopted OpenAI technologies?",
         type: "multiple-choice",
         options: [

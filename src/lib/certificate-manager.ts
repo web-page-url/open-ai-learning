@@ -139,8 +139,8 @@ export class CertificateManager {
    * Only returns true if user currently meets requirements (not just previously earned)
    */
   static checkAndAwardMasterCertificate(userId: string, completedSections: number, overallAccuracy: number): boolean {
-    // Must currently meet requirements (changed from 10 to 2 sections)
-    if (completedSections >= 2 && overallAccuracy >= 60) {
+    // Must currently meet requirements (updated to 1 section with 80% accuracy)
+    if (completedSections >= 1 && overallAccuracy >= 80) {
       if (!this.hasMasterCertificate(userId)) {
         this.awardMasterCertificate(userId);
         console.log('🏆 Master certificate newly awarded to user:', userId);
@@ -153,10 +153,10 @@ export class CertificateManager {
   }
 
   /**
-   * Check if user meets master certificate requirements (2 sections + 60% accuracy)
+   * Check if user meets master certificate requirements (1 section + 80% accuracy)
    */
   static meetsMasterCertificateRequirements(completedSections: number, overallAccuracy: number): boolean {
-    return completedSections >= 2 && overallAccuracy >= 60;
+    return completedSections >= 1 && overallAccuracy >= 80;
   }
 
   /**

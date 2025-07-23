@@ -325,7 +325,7 @@ export default function ReviewsPage() {
                   </span>
                 ) : (
                   <span className="flex items-center gap-2">
-                    <span>⭐</span>
+                    <span>🚀</span>
                     Submit Review
                   </span>
                 )}
@@ -335,7 +335,7 @@ export default function ReviewsPage() {
         </div>
 
         {/* Additional Info */}
-        <div className="mt-12 text-center">
+        {/* <div className="mt-12 text-center">
           <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-6 border border-blue-200/50 dark:border-blue-700/50">
             <div className="text-2xl mb-3">💙</div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
@@ -345,7 +345,7 @@ export default function ReviewsPage() {
               Your review will be used to improve our platform. We respect your privacy and will not share your email address publicly.
             </p>
           </div>
-        </div>
+        </div> */}
       </main>
     </div>
   );

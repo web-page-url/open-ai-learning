@@ -21,15 +21,15 @@ export default function Home() {
             </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             <div className="text-center">
-              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">2</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Sections</div>
+              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">1</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Section</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-green-600 dark:text-green-400">8</div>
               <div className="text-sm text-gray-600 dark:text-gray-400">Questions</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">~15</div>
+              <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">~16</div>
               <div className="text-sm text-gray-600 dark:text-gray-400">Minutes</div>
             </div>
             <div className="text-center">
@@ -101,35 +101,68 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Call to Action */}
-        <div className="mt-12 text-center">
-          <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl p-8 border border-blue-200/50 dark:border-blue-700/50">
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-              Ready to start learning about OpenAI?
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Begin with Section 1 to learn about OpenAI fundamentals or explore practical applications in Section 2.
-            </p>
+        {/* Section Overview */}
+        <div className="mt-16 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8">
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">
+            🤖 OpenAI Comprehensive Training
+          </h3>
+          
+          <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg p-6 mb-6">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h4 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  Complete OpenAI Mastery Course
+                </h4>
+                <p className="text-gray-600 dark:text-gray-400">
+                  From fundamentals to practical applications
+                </p>
+              </div>
+              <div className="text-right">
+                <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">8</div>
+                <div className="text-sm text-gray-500">Questions</div>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div>
+                <div className="text-lg font-bold text-blue-600 dark:text-blue-400">Intermediate</div>
+                <div className="text-xs text-gray-500">Difficulty</div>
+              </div>
+              <div>
+                <div className="text-lg font-bold text-green-600 dark:text-green-400">~16 min</div>
+                <div className="text-xs text-gray-500">Duration</div>
+              </div>
+              <div>
+                <div className="text-lg font-bold text-purple-600 dark:text-purple-400">80%+</div>
+                <div className="text-xs text-gray-500">For Master Cert</div>
+              </div>
+              <div>
+                <div className="text-lg font-bold text-orange-600 dark:text-orange-400">Certificate</div>
+                <div className="text-xs text-gray-500">Upon Completion</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center">
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link 
                 href="/section-1"
-                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-lg font-semibold transition-colors shadow-lg text-lg"
               >
-                Start Section 1
+                🚀 Start OpenAI Training
               </Link>
               <Link 
                 href="/my-scores"
-                className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+                className="bg-green-600 hover:bg-green-700 text-white px-6 py-4 rounded-lg font-medium transition-colors"
               >
-                View My Scores
+                📊 View My Progress
               </Link>
               <Link 
                 href="/reviews"
-                className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+                className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-4 rounded-lg font-medium transition-colors"
               >
                 ⭐ Share Review
               </Link>
-
             </div>
           </div>
         </div>

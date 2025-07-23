@@ -56,31 +56,19 @@ export interface UserAnswer {
 export const sections: Section[] = [
   {
     id: 1,
-    title: "Introduction to OpenAI",
-    description: "Understanding OpenAI, its mission, and core AI technologies",
-    difficulty: "beginner",
-    questionsCount: 4,
-    estimatedTime: "8 min",
+    title: "OpenAI Comprehensive Training",
+    description: "Complete guide to OpenAI technologies, applications, and practical implementations",
+    difficulty: "intermediate",
+    questionsCount: 8,
+    estimatedTime: "16 min",
     icon: "🤖",
-    color: "from-blue-500 to-cyan-500",
-    slug: "introduction-openai",
-    is_active: true
-  },
-  {
-    id: 2,
-    title: "OpenAI Applications and Use Cases",
-    description: "Exploring practical applications and real-world uses of OpenAI technologies",
-    difficulty: "intermediate", 
-    questionsCount: 4,
-    estimatedTime: "8 min",
-    icon: "💡",
-    color: "from-green-500 to-emerald-500",
-    slug: "openai-applications-use-cases",
+    color: "from-blue-500 to-purple-500",
+    slug: "openai-comprehensive-training",
     is_active: true
   }
 ];
 
-// Sample questions for each section (4 questions per section)
+// Sample questions for the single section (8 questions total)
 export const sampleQuestions: Record<number, Question[]> = {
   1: [
     {
@@ -133,12 +121,10 @@ export const sampleQuestions: Record<number, Question[]> = {
       points: 1,
       order_index: 4,
       is_active: true
-    }
-  ],
-  2: [
+    },
     {
-      id: "q2_1",
-      section_id: 2,
+      id: "q1_5",
+      section_id: 1,
       question_text: "Which of the following is a primary use case for ChatGPT?",
       question_type: "multiple-choice",
       options: ["Image recognition only", "Conversational AI and text generation", "Video editing", "Database management"],
@@ -146,12 +132,12 @@ export const sampleQuestions: Record<number, Question[]> = {
       explanation: "ChatGPT is designed for conversational AI, helping users with text generation, answering questions, writing assistance, and dialogue.",
       time_limit: 30,
       points: 1,
-      order_index: 1,
+      order_index: 5,
       is_active: true
     },
     {
-      id: "q2_2",
-      section_id: 2,
+      id: "q1_6",
+      section_id: 1,
       question_text: "What is DALL-E used for?",
       question_type: "multiple-choice",
       options: ["Text translation", "Code generation", "AI-generated images from text descriptions", "Music composition"],
@@ -159,24 +145,24 @@ export const sampleQuestions: Record<number, Question[]> = {
       explanation: "DALL-E is OpenAI's AI system that generates digital images from natural language descriptions, revolutionizing AI-powered creative content.",
       time_limit: 30,
       points: 1,
-      order_index: 2,
+      order_index: 6,
       is_active: true
     },
     {
-      id: "q2_3",
-      section_id: 2,
+      id: "q1_7",
+      section_id: 1,
       question_text: "OpenAI's models can be used for code generation and programming assistance.",
       question_type: "true-false",
       correct_answer: "true",
       explanation: "Yes, OpenAI's models like GPT-4 and Codex are capable of generating code, debugging, and providing programming assistance across multiple languages.",
       time_limit: 20,
       points: 1,
-      order_index: 3,
+      order_index: 7,
       is_active: true
     },
     {
-      id: "q2_4",
-      section_id: 2,
+      id: "q1_8",
+      section_id: 1,
       question_text: "Which industry has NOT commonly adopted OpenAI technologies?",
       question_type: "multiple-choice",
       options: ["Education and tutoring", "Content creation and marketing", "Customer service and support", "Traditional brick manufacturing"],
@@ -184,7 +170,7 @@ export const sampleQuestions: Record<number, Question[]> = {
       explanation: "While OpenAI technologies are widely adopted in education, content creation, and customer service, traditional manufacturing industries like brick-making have less direct applications.",
       time_limit: 30,
       points: 1,
-      order_index: 4,
+      order_index: 8,
       is_active: true
     }
   ]
