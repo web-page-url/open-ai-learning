@@ -1456,14 +1456,14 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
                     {currentQuestion.points} point{currentQuestion.points !== 1 ? 's' : ''}
                   </span>
                 </div>
-                <Timer 
-                  initialTime={60} 
+                {/* <Timer 
+                  initialTime={30} 
                   onComplete={() => {
                     handleQuestionAnswer(currentQuestion.id, '', false);
                   }}
                   autoStart={true}
                   size="sm"
-                />
+                /> */}
               </div>
             </div>
 

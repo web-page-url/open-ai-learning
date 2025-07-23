@@ -29,7 +29,7 @@ export default function Home() {
               <div className="text-sm text-gray-600 dark:text-gray-400">Questions</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">~16</div>
+              <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">~ 4 Minutes</div>
               <div className="text-sm text-gray-600 dark:text-gray-400">Minutes</div>
             </div>
             <div className="text-center">
@@ -40,7 +40,7 @@ export default function Home() {
         </div>
 
         {/* Reviews Section */}
-        <div className="mt-16 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8">
+        {/* <div className="mt-16 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8">
           <div className="text-center mb-8">
             <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
               What Learners Are Saying
@@ -99,7 +99,7 @@ export default function Home() {
               View All Reviews →
             </Link>
           </div>
-        </div>
+        </div> */}
 
         {/* Section Overview */}
         <div className="mt-16 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8">
@@ -129,7 +129,7 @@ export default function Home() {
                 <div className="text-xs text-gray-500">Difficulty</div>
               </div>
               <div>
-                <div className="text-lg font-bold text-green-600 dark:text-green-400">~16 min</div>
+                <div className="text-lg font-bold text-green-600 dark:text-green-400">~4 Minutes</div>
                 <div className="text-xs text-gray-500">Duration</div>
               </div>
               <div>
