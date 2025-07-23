@@ -75,15 +75,15 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
 
   const checkAuthentication = () => {
     setIsCheckingAuth(true);
-    
+
     try {
       const currentUser = UserSession.getCurrentUser();
-      
+
       if (!currentUser) {
         router.push('/login');
         return;
       }
-      
+
       // Convert UserSession format to UserInfo format expected by this component
       const userInfo = {
         id: currentUser.email, // Use email as ID for consistency
@@ -91,9 +91,9 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
         email: currentUser.email,
         mobile: undefined
       };
-      
+
       setUserInfo(userInfo);
-      
+
     } catch (error) {
       console.error('Authentication check failed:', error);
       router.push('/login');
@@ -105,7 +105,7 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
   const initializeDatabaseConnection = async () => {
     const isConnected = SectionsService.isAvailable();
     setIsDatabaseConnected(isConnected);
-    
+
     if (isConnected && userInfo) {
       console.log('✅ Database connected - enabling hybrid storage');
       console.log('📱 Using new SectionsService for database operations');
@@ -132,8 +132,8 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
   const checkForPreviousCompletion = () => {
     try {
       const completedSections = JSON.parse(localStorage.getItem('completed_sections') || '[]');
-      const existingCompletion = completedSections.find(section => section.sectionNumber === sectionNumber);
-      
+      const existingCompletion = completedSections.find((section: any) => section.sectionNumber === sectionNumber);
+
       if (existingCompletion) {
         console.log('🔍 Found previous completion:', existingCompletion);
         setIsAlreadyCompleted(true);
@@ -197,7 +197,7 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
   };
 
   const handleQuestionAnswer = (questionId: string, answer: string | number, isCorrect: boolean) => {
-    const responseTime = currentQuestionStartTime 
+    const responseTime = currentQuestionStartTime
       ? Math.floor((new Date().getTime() - currentQuestionStartTime.getTime()) / 1000)
       : 0;
 
@@ -219,7 +219,7 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
       responseTime,
       timestamp: new Date().toISOString()
     };
-    
+
     const existingProgress = JSON.parse(localStorage.getItem('section_progress') || '[]');
     existingProgress.push(sectionProgress);
     localStorage.setItem('section_progress', JSON.stringify(existingProgress));
@@ -230,7 +230,7 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
         userEmail: userInfo.email,
         responseData: sectionProgress
       });
-      
+
       // Convert to the format expected by SectionsService
       const answerData = {
         user_id: userInfo.email,
@@ -242,7 +242,7 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
         points_earned: isCorrect ? 1 : 0,
         created_at: new Date().toISOString()
       };
-      
+
       SectionsService.saveUserAnswer(userInfo.email, answerData)
         .then((success) => {
           console.log('💾 Question response save result:', success);
@@ -269,9 +269,9 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
   const completeSection = async () => {
     // Recalculate score from actual question responses to ensure accuracy
     const sectionProgress = JSON.parse(localStorage.getItem('section_progress') || '[]');
-    const sectionQuestionResponses = sectionProgress.filter(response => response.sectionNumber === sectionNumber);
-    const actualQuestionsCorrect = sectionQuestionResponses.filter(response => response.isCorrect).length;
-    
+    const sectionQuestionResponses = sectionProgress.filter((response: { sectionNumber: number; }) => response.sectionNumber === sectionNumber);
+    const actualQuestionsCorrect = sectionQuestionResponses.filter((response: { isCorrect: any; }) => response.isCorrect).length;
+
     console.log('🔍 Score Verification:', {
       localStateCorrect: progress.questionsCorrect,
       actualResponsesCorrect: actualQuestionsCorrect,
@@ -298,7 +298,7 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
 
     // Remove any existing completion for this section to avoid duplicates
     const completedSections = JSON.parse(localStorage.getItem('completed_sections') || '[]');
-    const filteredSections = completedSections.filter(section => section.sectionNumber !== sectionNumber);
+    const filteredSections = completedSections.filter((section: { sectionNumber: number; }) => section.sectionNumber !== sectionNumber);
     filteredSections.push(completionData);
     localStorage.setItem('completed_sections', JSON.stringify(filteredSections));
     console.log('✅ Saved to localStorage (removed duplicates)');
@@ -323,22 +323,22 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
         userData: userInfo,
         completionData
       });
-      
+
       setIsSyncing(true);
-      
+
       // Calculate actual questions_correct from database responses instead of local state
       try {
         const userAnswers = await SectionsService.getUserSectionAnswers(userInfo.email, sectionNumber);
         const actualQuestionsCorrect = userAnswers.filter(answer => answer.is_correct).length;
         const actualAccuracy = Math.round((actualQuestionsCorrect / questions.length) * 100);
-        
+
         console.log('🔍 Recalculated from database:', {
           localQuestionsCorrect: completionData.questionsCorrect,
           actualQuestionsCorrect,
           localAccuracy: completionData.accuracy,
           actualAccuracy
         });
-        
+
         // Convert to the format expected by SectionsService
         const progressData = {
           user_id: userInfo.email,
@@ -351,7 +351,7 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
           status: 'completed' as const,
           completed_at: completionData.completedAt
         };
-        
+
         SectionsService.updateUserProgress(userInfo.email, progressData)
           .then((success) => {
             console.log('💾 Section completion save result:', success);
@@ -375,7 +375,7 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
           status: 'completed' as const,
           completed_at: completionData.completedAt
         };
-        
+
         SectionsService.updateUserProgress(userInfo.email, progressData)
           .then((success) => {
             console.log('💾 Section completion save result:', success);
@@ -399,14 +399,14 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
   const generateSectionCertificate = () => {
     // Recalculate accuracy from actual responses for certificate
     const sectionProgress = JSON.parse(localStorage.getItem('section_progress') || '[]');
-    const sectionQuestionResponses = sectionProgress.filter(response => response.sectionNumber === sectionNumber);
-    const actualQuestionsCorrect = sectionQuestionResponses.filter(response => response.isCorrect).length;
+    const sectionQuestionResponses = sectionProgress.filter((response: { sectionNumber: number; }) => response.sectionNumber === sectionNumber);
+    const actualQuestionsCorrect = sectionQuestionResponses.filter((response: { isCorrect: any; }) => response.isCorrect).length;
     const accuracy = Math.round((actualQuestionsCorrect / questions.length) * 100);
-    
+
     const timeSpent = Math.floor((new Date().getTime() - progress.startTime.getTime()) / 1000);
     const completionDate = new Date();
     const participantName = userInfo?.name || 'Learning Participant';
-    
+
     // Track section certificate download
     if (userInfo?.email) {
       const userCerts = CertificateManager.getUserCertificates(userInfo.email);
@@ -418,7 +418,7 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
         localStorage.setItem(`user_certificates_${userInfo.email}`, JSON.stringify(userCerts));
       }
     }
-    
+
     const certificateHTML = `
       <!DOCTYPE html>
       <html>
@@ -753,11 +753,11 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
               <div class="signature">
                 <div class="signature-line"></div>
                 <div class="signature-title">Date Issued</div>
-                <div class="signature-subtitle">${completionDate.toLocaleDateString('en-US', { 
-                  year: 'numeric', 
-                  month: 'long', 
-                  day: 'numeric' 
-                })}</div>
+                <div class="signature-subtitle">${completionDate.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })}</div>
               </div>
             </div>
             
@@ -824,7 +824,7 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
   if (showCompletionCheck && previousCompletion) {
     const completionDate = new Date(previousCompletion.completedAt);
     const timeSince = Math.floor((new Date().getTime() - completionDate.getTime()) / (1000 * 60 * 60 * 24));
-    
+
     return (
       <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-orange-50 to-red-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 p-4">
         <div className="max-w-4xl mx-auto">
@@ -848,15 +848,15 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
             <h2 className="text-xl text-gray-600 dark:text-gray-300 mb-6">
               {sectionInfo?.title}
             </h2>
-            
+
             <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-xl p-6 border border-yellow-200/50 dark:border-yellow-700/50">
               <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed">
                 You completed this section <strong>{timeSince === 0 ? 'today' : `${timeSince} days ago`}</strong> on{' '}
-                <strong>{completionDate.toLocaleDateString('en-US', { 
+                <strong>{completionDate.toLocaleDateString('en-US', {
                   weekday: 'long',
-                  year: 'numeric', 
-                  month: 'long', 
-                  day: 'numeric' 
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
                 })}</strong>.
               </p>
             </div>
@@ -867,7 +867,7 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
             <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">
               📊 Your Previous Results
             </h3>
-            
+
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
               <div className="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-4 text-center">
                 <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
@@ -875,21 +875,21 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
                 </div>
                 <div className="text-sm text-gray-600 dark:text-gray-300">Questions Correct</div>
               </div>
-              
+
               <div className="bg-green-50 dark:bg-green-900/30 rounded-lg p-4 text-center">
                 <div className="text-2xl font-bold text-green-600 dark:text-green-400">
                   {previousCompletion.accuracy}%
                 </div>
                 <div className="text-sm text-gray-600 dark:text-gray-300">Accuracy</div>
               </div>
-              
+
               <div className="bg-purple-50 dark:bg-purple-900/30 rounded-lg p-4 text-center">
                 <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
                   {previousCompletion.score}
                 </div>
                 <div className="text-sm text-gray-600 dark:text-gray-300">Total Points</div>
               </div>
-              
+
               <div className="bg-orange-50 dark:bg-orange-900/30 rounded-lg p-4 text-center">
                 <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">
                   {Math.round(previousCompletion.timeSpent / 60)}m
@@ -921,7 +921,7 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
             <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6 text-center">
               What would you like to do?
             </h3>
-            
+
             <div className="grid md:grid-cols-2 gap-6">
               {/* View Previous Results */}
               <div className="text-center">
@@ -992,7 +992,7 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
             <h2 className="text-xl text-gray-600 dark:text-gray-300 mb-4">
               {sectionInfo?.title}
             </h2>
-            
+
             {/* Results Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
               <div className="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-4">
@@ -1001,21 +1001,21 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
                 </div>
                 <div className="text-sm text-gray-600 dark:text-gray-300">Questions Correct</div>
               </div>
-              
+
               <div className="bg-green-50 dark:bg-green-900/30 rounded-lg p-4">
                 <div className="text-2xl font-bold text-green-600 dark:text-green-400">
                   {accuracy}%
                 </div>
                 <div className="text-sm text-gray-600 dark:text-gray-300">Accuracy</div>
               </div>
-              
+
               <div className="bg-purple-50 dark:bg-purple-900/30 rounded-lg p-4">
                 <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
                   {progress.score}
                 </div>
                 <div className="text-sm text-gray-600 dark:text-gray-300">Total Points</div>
               </div>
-              
+
               <div className="bg-orange-50 dark:bg-orange-900/30 rounded-lg p-4">
                 <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">
                   {Math.round(timeSpent / 60)}m
@@ -1034,10 +1034,10 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
                   </h3>
                 </div>
                 <p className="text-gray-600 dark:text-gray-300 mb-6">
-                  Congratulations! You've successfully completed Section {sectionNumber} with {accuracy}% accuracy. 
+                  Congratulations! You've successfully completed Section {sectionNumber} with {accuracy}% accuracy.
                   Download your personalized certificate as proof of completion.
                 </p>
-                
+
                 <button
                   onClick={() => generateSectionCertificate()}
                   className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-semibold py-4 px-8 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg"
@@ -1061,10 +1061,10 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
                   </h3>
                 </div>
                 <p className="text-gray-600 dark:text-gray-300 mb-6">
-                  You completed Section {sectionNumber} with {accuracy}% accuracy. 
+                  You completed Section {sectionNumber} with {accuracy}% accuracy.
                   To earn a section certificate, you need to achieve 60% or higher accuracy.
                 </p>
-                
+
                 <div className="mb-6">
                   <div className="text-center mb-3">
                     <span className="text-lg font-semibold text-orange-600 dark:text-orange-400">
@@ -1072,7 +1072,7 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
                     </span>
                   </div>
                   <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4">
-                    <div 
+                    <div
                       className="bg-gradient-to-r from-orange-500 to-red-500 h-4 rounded-full transition-all duration-300"
                       style={{ width: `${Math.min(accuracy, 100)}%` }}
                     ></div>
@@ -1083,7 +1083,7 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
                     <span>100%</span>
                   </div>
                 </div>
-                
+
                 <button
                   onClick={() => router.push(`/section-${sectionNumber}`)}
                   className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold py-4 px-8 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg"
@@ -1136,9 +1136,9 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
               >
                 🏠 Back to Home
               </button>
-              
+
               <button
-                                    onClick={() => router.push('/')}
+                onClick={() => router.push('/')}
                 className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
               >
                 📊 View All My Scores
@@ -1151,43 +1151,39 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
               📝 Question Review
             </h2>
-            
-                         <div className="space-y-6">
-               {questions.map((question, index) => {
-                 const userAnswer = progress.userAnswers[question.id];
-                 const isCorrect = question.type === 'multiple-choice'
-                   ? userAnswer === question.correctAnswer.toString()
-                   : userAnswer === question.correctAnswer?.toString();
-                
+
+            <div className="space-y-6">
+              {questions.map((question, index) => {
+                const userAnswer = progress.userAnswers[question.id];
+                const isCorrect = question.type === 'multiple-choice'
+                  ? userAnswer === question.correctAnswer.toString()
+                  : userAnswer === question.correctAnswer?.toString();
+
                 return (
-                  <div key={question.id} className={`p-6 rounded-lg border-2 ${
-                    isCorrect 
-                      ? 'border-green-500 bg-green-50 dark:bg-green-900/20' 
-                      : 'border-red-500 bg-red-50 dark:bg-red-900/20'
-                  }`}>
+                  <div key={question.id} className={`p-6 rounded-lg border-2 ${isCorrect
+                    ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
+                    : 'border-red-500 bg-red-50 dark:bg-red-900/20'
+                    }`}>
                     {/* Question Header */}
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center gap-3">
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold ${
-                          isCorrect ? 'bg-green-500' : 'bg-red-500'
-                        }`}>
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold ${isCorrect ? 'bg-green-500' : 'bg-red-500'
+                          }`}>
                           {index + 1}
                         </div>
                         <div>
-                          <span className={`px-2 py-1 rounded text-xs font-medium ${
-                            question.category === 'general'
-                              ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400'
-                              : 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400'
-                          }`}>
+                          <span className={`px-2 py-1 rounded text-xs font-medium ${question.category === 'general'
+                            ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400'
+                            : 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400'
+                            }`}>
                             {question.category}
                           </span>
                         </div>
                       </div>
-                      <div className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        isCorrect 
-                          ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' 
-                          : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
-                      }`}>
+                      <div className={`px-3 py-1 rounded-full text-sm font-medium ${isCorrect
+                        ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                        : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
+                        }`}>
                         {isCorrect ? '✓ Correct' : '✗ Incorrect'}
                       </div>
                     </div>
@@ -1199,7 +1195,7 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
                       </h3>
                     </div>
 
-                                        {/* Answers Section */}
+                    {/* Answers Section */}
                     {question.type === 'multiple-choice' ? (
                       <div className="mb-4">
                         <div className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-3">
@@ -1209,39 +1205,36 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
                           {question.options?.map((option, optionIndex) => {
                             const isUserChoice = userAnswer === optionIndex.toString();
                             const isCorrectOption = optionIndex === (question.correctAnswer as number);
-                            
+
                             return (
-                              <div key={optionIndex} className={`p-4 rounded-lg border-2 flex items-center gap-3 ${
-                                isCorrectOption 
-                                  ? 'border-green-500 bg-green-50 dark:bg-green-900/20' 
-                                  : isUserChoice 
+                              <div key={optionIndex} className={`p-4 rounded-lg border-2 flex items-center gap-3 ${isCorrectOption
+                                ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
+                                : isUserChoice
                                   ? 'border-red-500 bg-red-50 dark:bg-red-900/20'
                                   : 'border-gray-300 bg-gray-50 dark:bg-gray-700 dark:border-gray-600'
-                              }`}>
+                                }`}>
                                 {/* Option Label */}
-                                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold ${
-                                  isCorrectOption 
-                                    ? 'bg-green-500' 
-                                    : isUserChoice 
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold ${isCorrectOption
+                                  ? 'bg-green-500'
+                                  : isUserChoice
                                     ? 'bg-red-500'
                                     : 'bg-gray-400'
-                                }`}>
+                                  }`}>
                                   {String.fromCharCode(65 + optionIndex)}
                                 </div>
-                                
+
                                 {/* Option Text */}
                                 <div className="flex-1">
-                                  <div className={`font-medium ${
-                                    isCorrectOption 
-                                      ? 'text-green-700 dark:text-green-400' 
-                                      : isUserChoice 
+                                  <div className={`font-medium ${isCorrectOption
+                                    ? 'text-green-700 dark:text-green-400'
+                                    : isUserChoice
                                       ? 'text-red-700 dark:text-red-400'
                                       : 'text-gray-700 dark:text-gray-300'
-                                  }`}>
+                                    }`}>
                                     {option}
                                   </div>
                                 </div>
-                                
+
                                 {/* Status Icons */}
                                 <div className="flex items-center gap-2">
                                   {isCorrectOption && (
@@ -1273,9 +1266,8 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
                           <div className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
                             Your Answer:
                           </div>
-                          <div className={`font-semibold ${
-                            isCorrect ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'
-                          }`}>
+                          <div className={`font-semibold ${isCorrect ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'
+                            }`}>
                             {userAnswer === 'true' ? 'True' : userAnswer === 'false' ? 'False' : userAnswer || 'No answer'}
                           </div>
                         </div>
@@ -1304,14 +1296,14 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
                       </div>
                     )}
 
-                                         {/* Question Stats */}
-                     <div className="mt-4 flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
-                       <span>⏱️ Time limit: {question.timeLimit}s</span>
-                       <span>🎯 Points: {question.points}</span>
-                       <span className="px-2 py-1 bg-gray-100 dark:bg-gray-600 rounded text-xs">
-                         {question.type}
-                       </span>
-                     </div>
+                    {/* Question Stats */}
+                    <div className="mt-4 flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+                      <span>⏱️ Time limit: {question.timeLimit}s</span>
+                      <span>🎯 Points: {question.points}</span>
+                      <span className="px-2 py-1 bg-gray-100 dark:bg-gray-600 rounded text-xs">
+                        {question.type}
+                      </span>
+                    </div>
                   </div>
                 );
               })}
@@ -1380,7 +1372,7 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
                   {sectionInfo.description}
                 </p>
               </div>
-              
+
               <div className="text-right">
                 <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                   {questions.length} questions
@@ -1408,7 +1400,7 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
             {!sessionStarted ? (
               <div className="text-center">
                 <p className="text-gray-600 dark:text-gray-300 mb-6">
-                  Ready to start this section? You'll answer {questions.length} questions 
+                  Ready to start this section? You'll answer {questions.length} questions
                   covering {sectionInfo.title.toLowerCase()}.
                 </p>
                 <button
@@ -1433,7 +1425,7 @@ export default function SimpleSectionLearning({ sectionNumber }: SimpleSectionLe
                   </span>
                 </div>
                 <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                  <div 
+                  <div
                     className="bg-gradient-to-r from-blue-600 to-indigo-600 h-2 rounded-full transition-all duration-300"
                     style={{ width: `${getProgressPercentage()}%` }}
                   ></div>
