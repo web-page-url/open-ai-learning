@@ -16,8 +16,8 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "OpenAI Learning Platform - Master AI Technologies and Applications",
-  description: "Professional OpenAI training with real-time analytics, individual progress tracking, and certification. Learn about GPT, ChatGPT, DALL-E and more.",
-  keywords: "OpenAI, GPT, ChatGPT, DALL-E, AI training, artificial intelligence, machine learning, AI education, language models",
+  description: "Professional OpenAI training with real-time analytics, individual progress tracking, and certification. Learn about OpenAI, Whisper, DALL-E and more.",
+  keywords: "OpenAI, GPT, Whisper, DALL-E, AI training, artificial intelligence, machine learning, AI education, language models",
   authors: [{ name: "Learning Platform Team" }],
   creator: "Interactive Learning Platform",
   publisher: "OpenAI Training Center",
