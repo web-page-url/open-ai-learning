@@ -80,14 +80,14 @@ export default function MyScoresPage() {
   const loadUserData = () => {
     try {
       setLoading(true);
-      
+
       const currentUser = UserSession.getCurrentUser();
-      
+
       if (!currentUser) {
         router.push('/login');
         return;
       }
-      
+
       // Convert UserSession format to UserInfo format expected by this component
       const userInfo = {
         id: currentUser.email, // Use email as ID for consistency
@@ -95,15 +95,15 @@ export default function MyScoresPage() {
         email: currentUser.email,
         mobile: undefined
       };
-      
+
       setUserInfo(userInfo);
-      
+
       // Note: Master certificate availability will be determined after loading section data
       // based on current completion status and accuracy requirements
-      
+
       // Load section completion data from localStorage
       loadSectionData();
-      
+
     } catch (error) {
       console.error('Error loading user data:', error);
       router.push('/login');
@@ -117,44 +117,44 @@ export default function MyScoresPage() {
       // Load completed sections
       let completedSections = JSON.parse(localStorage.getItem('completed_sections') || '[]') as SectionCompletion[];
       console.log('📊 Loaded completed sections (before cleanup):', completedSections);
-      
+
       // Remove duplicate sections (keep the latest one for each section)
       const uniqueSections = [];
       const sectionMap = new Map();
-      
+
       completedSections.forEach(section => {
-        if (!sectionMap.has(section.sectionNumber) || 
-            new Date(section.completedAt) > new Date(sectionMap.get(section.sectionNumber).completedAt)) {
+        if (!sectionMap.has(section.sectionNumber) ||
+          new Date(section.completedAt) > new Date(sectionMap.get(section.sectionNumber).completedAt)) {
           sectionMap.set(section.sectionNumber, section);
         }
       });
-      
+
       // Convert back to array
       completedSections = Array.from(sectionMap.values()).sort((a, b) => a.sectionNumber - b.sectionNumber);
-      
+
       // Save cleaned data back to localStorage
       localStorage.setItem('completed_sections', JSON.stringify(completedSections));
       console.log('📊 Cleaned completed sections:', completedSections);
-      
+
       setSectionCompletions(completedSections);
-      
+
       // Load individual question responses
       const questionProgress = JSON.parse(localStorage.getItem('section_progress') || '[]') as QuestionResponse[];
       console.log('📊 Loaded question responses:', questionProgress);
       setQuestionResponses(questionProgress);
-      
+
       // Recalculate scores from actual question responses to fix any incorrect data
       const correctedSections = completedSections.map(section => {
         const sectionResponses = questionProgress.filter(response => response.sectionNumber === section.sectionNumber);
         const actualCorrect = sectionResponses.filter(response => response.isCorrect).length;
         const actualAccuracy = section.totalQuestions > 0 ? Math.round((actualCorrect / section.totalQuestions) * 100) : 0;
-        
+
         if (actualCorrect !== section.questionsCorrect || actualAccuracy !== section.accuracy) {
           console.log(`🔧 Correcting scores for Section ${section.sectionNumber}:`, {
             old: { correct: section.questionsCorrect, accuracy: section.accuracy },
             new: { correct: actualCorrect, accuracy: actualAccuracy }
           });
-          
+
           return {
             ...section,
             questionsCorrect: actualCorrect,
@@ -164,18 +164,18 @@ export default function MyScoresPage() {
         }
         return section;
       });
-      
+
       // Save corrected data if any changes were made
       if (JSON.stringify(correctedSections) !== JSON.stringify(completedSections)) {
         localStorage.setItem('completed_sections', JSON.stringify(correctedSections));
         setSectionCompletions(correctedSections);
         console.log('✅ Saved corrected section scores');
       }
-      
+
       // Calculate and update overall statistics
       const calculatedStats = calculateOverallStats(correctedSections, questionProgress);
       console.log('📊 Calculated overall stats:', calculatedStats);
-      
+
     } catch (error) {
       console.error('Error loading section data:', error);
     }
@@ -189,7 +189,7 @@ export default function MyScoresPage() {
     const overallAccuracy = totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 100) : 0;
     const averageTime = totalSections > 0 ? Math.round(totalTime / totalSections) : 0;
     const bestAccuracy = completions.length > 0 ? Math.max(...completions.map(c => c.accuracy)) : 0;
-    
+
     const newStats = {
       totalSectionsCompleted: totalSections,
       totalQuestionsAnswered: totalQuestions,
@@ -204,7 +204,7 @@ export default function MyScoresPage() {
     // Check if user currently meets master certificate requirements
     if (userInfo?.email) {
       const meetsCurrentRequirements = CertificateManager.meetsMasterCertificateRequirements(totalSections, overallAccuracy);
-      
+
       if (meetsCurrentRequirements) {
         // Award certificate if requirements are met and not already awarded
         const masterCertAvailable = CertificateManager.checkAndAwardMasterCertificate(userInfo.email, totalSections, overallAccuracy);
@@ -213,18 +213,18 @@ export default function MyScoresPage() {
       } else {
         // Requirements not met - certificate not available (even if previously earned)
         setMasterCertificateAvailable(false);
-        console.log('❌ Master certificate requirements NOT met:', { 
-          sections: totalSections, 
+        console.log('❌ Master certificate requirements NOT met:', {
+          sections: totalSections,
           accuracy: overallAccuracy,
           needsSections: totalSections < 1, // Updated to 1 section
-          needsAccuracy: overallAccuracy < 80 
+          needsAccuracy: overallAccuracy < 80
         });
       }
     }
 
     // Update the state with calculated statistics
     setOverallStats(newStats);
-    
+
     return newStats;
   };
 
@@ -232,12 +232,12 @@ export default function MyScoresPage() {
     const participantName = userInfo?.name || 'Learning Participant';
     const completionDate = new Date();
     const courseTitle = 'OpenAI Master Course';
-    
+
     // Track certificate download
     if (userInfo?.email) {
       CertificateManager.incrementMasterCertificateDownload(userInfo.email);
     }
-    
+
     const certificateHTML = `
       <!DOCTYPE html>
       <html>
@@ -245,403 +245,237 @@ export default function MyScoresPage() {
         <meta charset="UTF-8">
         <title>OpenAI Master Certificate - ${participantName}</title>
         <style>
-          @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap');
+          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
           
           body {
             font-family: 'Inter', sans-serif;
             margin: 0;
-            padding: 40px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-            min-height: 100vh;
-            color: #2c3e50;
+            padding: 20px;
+            background: #f8fafc;
+            color: #1e293b;
           }
           
           .certificate {
             background: white;
-            max-width: 1000px;
+            max-width: 700px;
             margin: 0 auto;
-            padding: 80px;
-            border-radius: 20px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.2);
-            border: 15px solid #f8f9fa;
-            position: relative;
-            overflow: hidden;
-          }
-          
-          .certificate::before {
-            content: '';
-            position: absolute;
-            top: 40px;
-            left: 40px;
-            right: 40px;
-            bottom: 40px;
-            border: 4px solid #e9ecef;
-            border-radius: 12px;
-            z-index: 1;
-          }
-          
-          .certificate::after {
-            content: '';
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            right: 20px;
-            bottom: 20px;
-            border: 2px solid #dee2e6;
-            border-radius: 16px;
-            z-index: 1;
-          }
-          
-          .content {
-            position: relative;
-            z-index: 2;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 2px solid #e2e8f0;
           }
           
           .header {
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 15px;
           }
           
-          .master-badge {
-            width: 120px;
-            height: 120px;
-            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 50%, #ffd700 100%);
-            border-radius: 50%;
-            margin: 0 auto 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
-            border: 8px solid #fff;
-            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+          .logo {
+            font-size: 40px;
+            margin-bottom: 8px;
           }
           
           .title {
-            font-family: 'Playfair Display', serif;
-            font-size: 56px;
-            color: #2c3e50;
-            margin-bottom: 15px;
-            font-weight: 900;
-            letter-spacing: 2px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            font-size: 28px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 6px;
           }
           
           .subtitle {
-            font-size: 24px;
-            color: #6c757d;
-            margin-bottom: 20px;
-            font-weight: 300;
+            font-size: 16px;
+            color: #64748b;
+            margin-bottom: 12px;
           }
           
-          .master-title {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          .badge {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
             color: white;
-            padding: 16px 32px;
-            border-radius: 30px;
-            font-weight: 700;
-            font-size: 20px;
-            margin-bottom: 40px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            padding: 6px 16px;
+            border-radius: 18px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+          }
+          
+          .content {
+            text-align: center;
+            margin: 25px 0;
           }
           
           .certification-text {
-            font-size: 26px;
-            color: #495057;
-            margin: 40px 0;
-            line-height: 1.6;
+            font-size: 16px;
+            color: #475569;
+            margin: 12px 0;
           }
           
           .recipient {
-            font-family: 'Playfair Display', serif;
-            font-size: 52px;
-            color: #3498db;
-            margin: 40px 0;
+            font-size: 30px;
             font-weight: 700;
+            color: #3b82f6;
+            margin: 16px 0;
             text-decoration: underline;
-            text-decoration-color: #e9ecef;
-            text-underline-offset: 12px;
-            text-decoration-thickness: 4px;
+            text-decoration-color: #e2e8f0;
+            text-underline-offset: 6px;
           }
           
           .course-title {
-            font-size: 32px;
-            color: #2c3e50;
-            margin: 30px 0;
-            font-weight: 700;
-            font-style: italic;
-          }
-          
-          .mastery-statement {
             font-size: 20px;
-            color: #495057;
-            margin: 40px 0;
-            text-align: center;
-            line-height: 1.8;
+            font-weight: 600;
+            color: #1e293b;
+            margin: 16px 0;
             font-style: italic;
           }
           
-          .achievement-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+          .stats {
+            display: flex;
+            justify-content: center;
             gap: 30px;
-            margin: 50px 0;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            padding: 40px;
-            border-radius: 16px;
-            border-left: 6px solid #667eea;
+            margin: 25px 0;
+            padding: 16px;
+            background: #f1f5f9;
+            border-radius: 6px;
           }
           
-          .achievement-item {
+          .stat {
             text-align: center;
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
           }
           
-          .achievement-label {
-            font-size: 14px;
-            color: #6c757d;
-            margin-bottom: 10px;
+          .stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #3b82f6;
+          }
+          
+          .stat-label {
+            font-size: 11px;
+            color: #64748b;
             text-transform: uppercase;
             letter-spacing: 1px;
-            font-weight: 600;
           }
           
-          .achievement-value {
-            font-size: 28px;
-            color: #2c3e50;
-            font-weight: 800;
-            margin-bottom: 5px;
-          }
-          
-          .achievement-icon {
-            font-size: 20px;
-            margin-bottom: 10px;
-          }
-          
-          .skills-mastered {
-            margin: 50px 0;
-            text-align: center;
-          }
-          
-          .skill-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            color: white;
-            padding: 12px 24px;
-            margin: 10px;
-            border-radius: 30px;
-            font-size: 16px;
-            font-weight: 600;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-          }
-          
-          .certification-statement {
-            font-size: 20px;
-            color: #495057;
-            margin: 50px 0;
-            text-align: center;
-            line-height: 1.8;
-            padding: 30px;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
-            border-radius: 12px;
-            border: 2px solid rgba(102, 126, 234, 0.1);
-          }
-          
-          .signature-section {
+          .footer {
             display: flex;
             justify-content: space-between;
-            align-items: end;
-            margin-top: 80px;
-            padding-top: 40px;
-            border-top: 3px solid #e9ecef;
+            align-items: center;
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 2px solid #e2e8f0;
           }
           
           .signature {
             text-align: center;
-            width: 250px;
           }
           
           .signature-line {
-            border-top: 3px solid #2c3e50;
-            margin-bottom: 10px;
+            width: 150px;
+            border-top: 2px solid #1e293b;
+            margin-bottom: 5px;
+          }
+          
+          .signature-name {
+            font-weight: 600;
+            color: #1e293b;
           }
           
           .signature-title {
-            font-weight: 700;
-            margin-bottom: 5px;
-            color: #2c3e50;
-            font-size: 16px;
-          }
-          
-          .signature-subtitle {
             font-size: 12px;
-            color: #6c757d;
+            color: #64748b;
           }
           
-          .verification-section {
-            text-align: center;
-            flex-shrink: 0;
-          }
-          
-          .master-seal {
-            width: 140px;
-            height: 140px;
-            border: 5px solid #ffd700;
+          .seal {
+            width: 80px;
+            height: 80px;
+            border: 3px solid #fbbf24;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 36px;
-            color: #ffd700;
+            font-size: 24px;
+            color: #fbbf24;
             font-weight: bold;
-            margin: 0 auto 15px;
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 215, 0, 0.05) 100%);
-            position: relative;
-          }
-          
-          .master-seal::before {
-            content: 'MASTER';
-            position: absolute;
-            bottom: 20px;
-            font-size: 10px;
-            letter-spacing: 2px;
-            font-weight: 800;
-          }
-          
-          .seal-text {
-            font-size: 12px;
-            color: #6c757d;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
+            background: rgba(251, 191, 36, 0.1);
           }
           
           .certificate-id {
-            position: absolute;
-            bottom: 30px;
-            right: 50px;
-            font-size: 11px;
-            color: #adb5bd;
-            font-family: 'Courier New', monospace;
-          }
-          
-          .openai-main-badge {
-            background: linear-gradient(135deg, #24292e 0%, #586069 100%);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-size: 14px;
-            margin: 20px auto;
-            display: inline-block;
-            font-weight: 600;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 10px;
+            color: #94a3b8;
+            font-family: monospace;
           }
           
           @media print {
             body { 
               background: white; 
-              padding: 20px; 
+              padding: 0; 
             }
             .certificate { 
               box-shadow: none; 
-              border: 2px solid #ddd; 
-              margin: 0;
+              border: 1px solid #ccc; 
             }
           }
         </style>
       </head>
       <body>
         <div class="certificate">
+          <div class="header">
+            <div class="logo">🏆</div>
+            <div class="title">MASTER CERTIFICATE</div>
+            <div class="subtitle">OpenAI Learning Platform</div>
+            <div class="badge">AI Technology Mastery</div>
+          </div>
+          
           <div class="content">
-            <div class="header">
-              <div class="master-badge">🏆</div>
-              <div class="title">MASTER CERTIFICATE</div>
-              <div class="subtitle">OpenAI Learning Platform</div>
-              <div class="master-title">AI Technology Mastery</div>
-            </div>
-            
-            <div class="certification-text">
-              This certifies that
-            </div>
-            
+            <div class="certification-text">This certifies that</div>
             <div class="recipient">${participantName}</div>
-            
-            <div class="certification-text">
-              has successfully completed the comprehensive
-            </div>
-            
+            <div class="certification-text">has successfully completed</div>
             <div class="course-title">${courseTitle}</div>
             
-            <div class="mastery-statement">
-              "Demonstrating exceptional proficiency in artificial intelligence technologies, practical AI applications, and comprehensive OpenAI mastery through rigorous assessment."
-            </div>
-            
-            <div class="achievement-grid">
-              <div class="achievement-item">
-                <div class="achievement-icon">🎯</div>
-                <div class="achievement-label">Overall Accuracy</div>
-                <div class="achievement-value">${overallStats.overallAccuracy}%</div>
+            <div class="stats">
+              <div class="stat">
+                <div class="stat-value">${overallStats.overallAccuracy}%</div>
+                <div class="stat-label">Accuracy</div>
               </div>
-              <div class="achievement-item">
-                <div class="achievement-icon">📚</div>
-                <div class="achievement-label">Section Completed</div>
-                <div class="achievement-value">1/1</div>
+              <div class="stat">
+                <div class="stat-value">${overallStats.totalQuestionsAnswered}</div>
+                <div class="stat-label">Questions</div>
               </div>
-              <div class="achievement-item">
-                <div class="achievement-icon">❓</div>
-                <div class="achievement-label">Questions Answered</div>
-                <div class="achievement-value">${overallStats.totalQuestionsAnswered}</div>
+              <div class="stat">
+                <div class="stat-value">1/1</div>
+                <div class="stat-label">Section</div>
               </div>
             </div>
             
-            <div class="skills-mastered">
-              <span class="skill-badge">🤖 OpenAI Fundamentals</span>
-              <span class="skill-badge">⚙️ AI Model Mastery</span>
-              <span class="skill-badge">💻 Practical Applications</span>
-              <span class="skill-badge">🔧 Use Case Development</span>
-              <span class="skill-badge">🛡️ Responsible AI</span>
-              <span class="skill-badge">🛠️ Real-world Implementation</span>
+            <div class="certification-text" style="font-size: 16px; margin-top: 20px;">
+              Demonstrating comprehensive understanding of OpenAI technologies and practical AI applications
+            </div>
+          </div>
+          
+          <div class="footer">
+            <div class="signature">
+              <div class="signature-line"></div>
+              <div class="signature-name">Anubhav Chaudhary</div>
+              <div class="signature-title">Instructor</div>
             </div>
             
-            <div class="certification-statement">
-              <strong>This Master Certificate</strong> validates comprehensive understanding and practical application of OpenAI technologies across all learning domains. The recipient has demonstrated expertise in AI applications, ethical AI practices, and modern artificial intelligence implementations. This certification represents dedication to continuous learning and mastery of cutting-edge AI technologies.
-            </div>
+            <div class="seal">★</div>
             
-            <div class="openai-main-badge">
-              🤖 Powered by OpenAI Learning Platform • Professional Certification
+            <div class="signature">
+              <div class="signature-line"></div>
+              <div class="signature-name">${completionDate.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    })}</div>
+              <div class="signature-title">Date Issued</div>
             </div>
-            
-            <div class="signature-section">
-              <div class="signature">
-                <div class="signature-line"></div>
-                <div class="signature-title">Anubhav Chaudhary</div>
-                <div class="signature-subtitle">Instructor</div>
-              </div>
-              
-              <div class="verification-section">
-                <div class="master-seal">★</div>
-                <div class="seal-text">Verified Master Certificate</div>
-              </div>
-              
-              <div class="signature">
-                <div class="signature-line"></div>
-                <div class="signature-title">Date Awarded</div>
-                <div class="signature-subtitle">${completionDate.toLocaleDateString('en-US', { 
-                  year: 'numeric', 
-                  month: 'long', 
-                  day: 'numeric' 
-                })}</div>
-              </div>
-            </div>
-            
-            <div class="certificate-id">
-              Master Certificate ID: GCP-MASTER-${Date.now()}-${userInfo?.email?.substring(0, 8) || 'ANON'}
-            </div>
+          </div>
+          
+          <div class="certificate-id">
+            ID: MASTER-${Date.now()}-learning
           </div>
         </div>
       </body>
@@ -675,12 +509,12 @@ export default function MyScoresPage() {
       'Cancel = Keep everything\n\n' +
       'This action cannot be undone!'
     );
-    
+
     if (!choice) return;
 
     try {
       console.log('🗑️ Starting data clearing process...');
-      
+
       // Clear localStorage first
       localStorage.removeItem('completed_sections');
       localStorage.removeItem('section_progress');
@@ -691,7 +525,7 @@ export default function MyScoresPage() {
         console.log('🔄 Attempting to clear database data...');
         // Clear data from localStorage (since we're using fallback data)
         const dbCleared = true;
-        
+
         if (dbCleared) {
           console.log('✅ Successfully cleared database data');
         } else {
@@ -714,7 +548,7 @@ export default function MyScoresPage() {
       });
 
       alert('✅ Progress data cleared successfully!\n\nYour account is still active.');
-      
+
     } catch (error) {
       console.error('Error clearing data:', error);
       alert('❌ Error clearing data. Please try again.');
@@ -724,7 +558,7 @@ export default function MyScoresPage() {
   const fixScoresNow = () => {
     const confirmFix = confirm('🔧 This will recalculate your scores based on your actual question responses. Continue?');
     if (!confirmFix) return;
-    
+
     try {
       loadSectionData(); // This will trigger the score correction logic
       alert('✅ Scores have been recalculated! Your scores should now be accurate.');
@@ -745,7 +579,7 @@ export default function MyScoresPage() {
       'You will need to re-register.\n\n' +
       'Are you absolutely sure?'
     );
-    
+
     if (!confirmed) return;
 
     const doubleConfirm = confirm(
@@ -764,7 +598,7 @@ export default function MyScoresPage() {
 
     try {
       console.log('🗑️ Starting account deletion process...');
-      
+
       // Clear localStorage first
       localStorage.removeItem('completed_sections');
       localStorage.removeItem('section_progress');
@@ -776,7 +610,7 @@ export default function MyScoresPage() {
         console.log('🔄 Attempting to delete account from database...');
         // Clear account data from localStorage (since we're using fallback data)
         const accountDeleted = true;
-        
+
         if (accountDeleted) {
           console.log('✅ Successfully deleted account from database');
         } else {
@@ -786,7 +620,7 @@ export default function MyScoresPage() {
 
       alert('✅ Account deleted successfully!\n\nRedirecting to login page...');
       router.push('/login');
-      
+
     } catch (error) {
       console.error('Error deleting account:', error);
       alert('❌ Error deleting account. Please try again.');
@@ -811,7 +645,7 @@ export default function MyScoresPage() {
   const generateSectionCertificateFromScores = (sectionNumber: number, completion: SectionCompletion) => {
     const participantName = userInfo?.name || 'Learning Participant';
     const sectionInfo = sections.find(s => s.id === sectionNumber);
-    
+
     // Track section certificate download
     if (userInfo?.email) {
       const userCerts = CertificateManager.getUserCertificates(userInfo.email);
@@ -823,7 +657,7 @@ export default function MyScoresPage() {
         localStorage.setItem(`user_certificates_${userInfo.email}`, JSON.stringify(userCerts));
       }
     }
-    
+
     const certificateHTML = `
       <!DOCTYPE html>
       <html>
@@ -1158,11 +992,11 @@ export default function MyScoresPage() {
               <div class="signature">
                 <div class="signature-line"></div>
                 <div class="signature-title">Date Issued</div>
-                <div class="signature-subtitle">${new Date(completion.completedAt).toLocaleDateString('en-US', { 
-                  year: 'numeric', 
-                  month: 'long', 
-                  day: 'numeric' 
-                })}</div>
+                <div class="signature-subtitle">${new Date(completion.completedAt).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })}</div>
               </div>
             </div>
             
@@ -1213,7 +1047,7 @@ export default function MyScoresPage() {
       <div className="max-w-7xl mx-auto">
         {/* User Greeting */}
         <UserGreeting />
-        
+
         {/* Header */}
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 mb-8 border border-gray-200 dark:border-gray-700">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -1222,11 +1056,11 @@ export default function MyScoresPage() {
                 📊 My Learning Scores
               </h1>
               <p className="text-gray-600 dark:text-gray-300">
-                Welcome back, <span className="font-semibold">{userInfo?.name}</span>! 
+                Welcome back, <span className="font-semibold">{userInfo?.name}</span>!
                 Track your progress across all learning sections.
               </p>
             </div>
-            
+
             <div className="flex gap-3">
               <button
                 onClick={() => router.push('/')}
@@ -1278,11 +1112,10 @@ export default function MyScoresPage() {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${
-                  activeTab === tab
-                    ? 'bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 shadow-sm'
-                    : 'text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white'
-                }`}
+                className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${activeTab === tab
+                  ? 'bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 shadow-sm'
+                  : 'text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white'
+                  }`}
               >
                 {tab === 'overview' && '📈 Overview'}
                 {tab === 'sections' && '📚 Sections'}
@@ -1312,7 +1145,7 @@ export default function MyScoresPage() {
                   🔍 Debug Data
                 </button>
               </div>
-              
+
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                 <div className="text-center">
                   <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
@@ -1320,21 +1153,21 @@ export default function MyScoresPage() {
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-300">Sections Completed</div>
                 </div>
-                
+
                 <div className="text-center">
                   <div className="text-3xl font-bold text-green-600 dark:text-green-400">
                     {overallStats.overallAccuracy}%
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-300">Overall Accuracy</div>
                 </div>
-                
+
                 <div className="text-center">
                   <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">
                     {overallStats.totalQuestionsAnswered}
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-300">Questions Answered</div>
                 </div>
-                
+
                 <div className="text-center">
                   <div className="text-3xl font-bold text-orange-600 dark:text-orange-400">
                     {Math.floor(overallStats.totalTimeSpent / 60)}m
@@ -1354,13 +1187,13 @@ export default function MyScoresPage() {
                           Master Certificate Available!
                         </h3>
                         <p className="text-lg text-gray-600 dark:text-gray-300">
-                                                                                  {overallStats.totalSectionsCompleted >= 2 && overallStats.overallAccuracy >= 60
-                             ? `Congratulations! You've mastered all 2 sections with ${overallStats.overallAccuracy}% accuracy!` 
+                          {overallStats.totalSectionsCompleted >= 2 && overallStats.overallAccuracy >= 60
+                            ? `Congratulations! You've mastered all 2 sections with ${overallStats.overallAccuracy}% accuracy!`
                             : "Your certificate is permanently available - download anytime!"}
                         </p>
                       </div>
                     </div>
-                    
+
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                       <div className="bg-white/70 dark:bg-gray-800/70 rounded-lg p-3">
                         <div className="text-lg font-bold text-blue-600">6/6</div>
@@ -1375,7 +1208,7 @@ export default function MyScoresPage() {
                         <div className="text-xs text-gray-600 dark:text-gray-300">Total Questions</div>
                       </div>
                     </div>
-                    
+
                     <button
                       onClick={() => generateCompleteCertificate()}
                       className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold py-4 px-8 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg text-lg"
@@ -1385,7 +1218,7 @@ export default function MyScoresPage() {
                         <span>Download Master Certificate</span>
                       </span>
                     </button>
-                    
+
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-3">
                       ✅ Permanently Available - Download anytime after login | LinkedIn & Portfolio Ready
                     </p>
@@ -1403,26 +1236,24 @@ export default function MyScoresPage() {
                     <p className="text-gray-600 dark:text-gray-300 mb-6">
                       Complete all 2 sections with 60%+ overall accuracy to earn your OpenAI Master Certificate
                     </p>
-                    
+
                     {/* Requirements Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                       {/* Sections Progress */}
                       <div className="bg-white/70 dark:bg-gray-800/70 rounded-lg p-4">
                         <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">Sections Completed</div>
                         <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 mb-2">
-                          <div 
-                            className={`h-3 rounded-full transition-all duration-300 ${
-                              overallStats.totalSectionsCompleted >= 6 
-                                ? 'bg-gradient-to-r from-green-500 to-green-600' 
-                                : 'bg-gradient-to-r from-blue-500 to-blue-600'
-                            }`}
+                          <div
+                            className={`h-3 rounded-full transition-all duration-300 ${overallStats.totalSectionsCompleted >= 6
+                              ? 'bg-gradient-to-r from-green-500 to-green-600'
+                              : 'bg-gradient-to-r from-blue-500 to-blue-600'
+                              }`}
                             style={{ width: `${(overallStats.totalSectionsCompleted / 6) * 100}%` }}
                           ></div>
                         </div>
-                        <div className={`text-lg font-bold ${
-                                                                                                              overallStats.totalSectionsCompleted >= 2 ? 'text-green-600' : 'text-blue-600'
-                        }`}>
-                                                        {overallStats.totalSectionsCompleted}/2 Sections
+                        <div className={`text-lg font-bold ${overallStats.totalSectionsCompleted >= 2 ? 'text-green-600' : 'text-blue-600'
+                          }`}>
+                          {overallStats.totalSectionsCompleted}/2 Sections
                         </div>
                         <div className="text-xs text-gray-500 dark:text-gray-400">
                           {overallStats.totalSectionsCompleted >= 6 ? '✅ Complete' : `${6 - overallStats.totalSectionsCompleted} remaining`}
@@ -1433,18 +1264,16 @@ export default function MyScoresPage() {
                       <div className="bg-white/70 dark:bg-gray-800/70 rounded-lg p-4">
                         <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">Overall Accuracy</div>
                         <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 mb-2">
-                          <div 
-                            className={`h-3 rounded-full transition-all duration-300 ${
-                              overallStats.overallAccuracy >= 60 
-                                ? 'bg-gradient-to-r from-green-500 to-green-600' 
-                                : 'bg-gradient-to-r from-orange-500 to-red-500'
-                            }`}
+                          <div
+                            className={`h-3 rounded-full transition-all duration-300 ${overallStats.overallAccuracy >= 60
+                              ? 'bg-gradient-to-r from-green-500 to-green-600'
+                              : 'bg-gradient-to-r from-orange-500 to-red-500'
+                              }`}
                             style={{ width: `${Math.min(overallStats.overallAccuracy, 100)}%` }}
                           ></div>
                         </div>
-                        <div className={`text-lg font-bold ${
-                          overallStats.overallAccuracy >= 60 ? 'text-green-600' : 'text-orange-600'
-                        }`}>
+                        <div className={`text-lg font-bold ${overallStats.overallAccuracy >= 60 ? 'text-green-600' : 'text-orange-600'
+                          }`}>
                           {overallStats.overallAccuracy}% Accuracy
                         </div>
                         <div className="text-xs text-gray-500 dark:text-gray-400">
@@ -1455,11 +1284,10 @@ export default function MyScoresPage() {
 
                     {/* Overall Progress */}
                     <div className="text-center">
-                      <div className={`text-lg font-semibold ${
-                        CertificateManager.meetsMasterCertificateRequirements(overallStats.totalSectionsCompleted, overallStats.overallAccuracy)
-                          ? 'text-green-600 dark:text-green-400'
-                          : 'text-gray-900 dark:text-white'
-                      }`}>
+                      <div className={`text-lg font-semibold ${CertificateManager.meetsMasterCertificateRequirements(overallStats.totalSectionsCompleted, overallStats.overallAccuracy)
+                        ? 'text-green-600 dark:text-green-400'
+                        : 'text-gray-900 dark:text-white'
+                        }`}>
                         {CertificateManager.meetsMasterCertificateRequirements(overallStats.totalSectionsCompleted, overallStats.overallAccuracy)
                           ? '🎉 All Requirements Met! Master Certificate Available!'
                           : 'Complete requirements above to unlock Master Certificate'
@@ -1474,7 +1302,7 @@ export default function MyScoresPage() {
             {/* Recent Achievements */}
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-200 dark:border-gray-700">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">🏆 Achievements</h2>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className={`p-4 rounded-lg border-2 ${overallStats.totalSectionsCompleted >= 1 ? 'border-green-500 bg-green-50 dark:bg-green-900/20' : 'border-gray-300 bg-gray-50 dark:bg-gray-700'}`}>
                   <div className="flex items-center gap-3">
@@ -1485,7 +1313,7 @@ export default function MyScoresPage() {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className={`p-4 rounded-lg border-2 ${overallStats.overallAccuracy >= 60 ? 'border-green-500 bg-green-50 dark:bg-green-900/20' : 'border-gray-300 bg-gray-50 dark:bg-gray-700'}`}>
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">🎯</span>
@@ -1505,13 +1333,13 @@ export default function MyScoresPage() {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className={`p-4 rounded-lg border-2 ${overallStats.totalSectionsCompleted >= 10 && overallStats.overallAccuracy >= 60 ? 'border-green-500 bg-green-50 dark:bg-green-900/20' : 'border-gray-300 bg-gray-50 dark:bg-gray-700'}`}>
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">🎓</span>
                     <div>
                       <div className="font-semibold text-gray-900 dark:text-white">Master Graduate</div>
-                                                      <div className="text-sm text-gray-600 dark:text-gray-300">Complete all Question + 90% accuracy</div>
+                      <div className="text-sm text-gray-600 dark:text-gray-300">Complete all Question + 90% accuracy</div>
                     </div>
                   </div>
                 </div>
@@ -1525,11 +1353,11 @@ export default function MyScoresPage() {
           <div className="space-y-6">
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-200 dark:border-gray-700">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">📚 Section Progress</h2>
-              
+
               {sections.map((section) => {
                 const completion = sectionCompletions.find(c => c.sectionNumber === section.id);
                 const isCompleted = !!completion;
-                
+
                 return (
                   <div key={section.id} className="mb-6 last:mb-0">
                     <div className="flex items-center justify-between p-6 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
@@ -1537,7 +1365,7 @@ export default function MyScoresPage() {
                         <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
                           <span className="text-white font-bold">{section.id}</span>
                         </div>
-                        
+
                         <div>
                           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                             {section.title}
@@ -1555,13 +1383,12 @@ export default function MyScoresPage() {
                           </div>
                         </div>
                       </div>
-                      
+
                       <div className="text-right">
                         {isCompleted ? (
                           <div>
-                            <div className={`text-2xl font-bold ${
-                              completion.accuracy >= 60 ? 'text-green-600 dark:text-green-400' : 'text-orange-600 dark:text-orange-400'
-                            }`}>
+                            <div className={`text-2xl font-bold ${completion.accuracy >= 60 ? 'text-green-600 dark:text-green-400' : 'text-orange-600 dark:text-orange-400'
+                              }`}>
                               {completion.accuracy}%
                             </div>
                             <div className="text-sm text-gray-600 dark:text-gray-300">
@@ -1615,7 +1442,7 @@ export default function MyScoresPage() {
                   </div>
                 );
               })}
-              
+
               {sectionCompletions.length === 0 && (
                 <div className="text-center py-12">
                   <div className="text-6xl mb-4">📚</div>
@@ -1642,7 +1469,7 @@ export default function MyScoresPage() {
           <div className="space-y-6">
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-200 dark:border-gray-700">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">🔍 Detailed Question Responses</h2>
-              
+
               {questionResponses.length > 0 ? (
                 <div className="space-y-4 max-h-96 overflow-y-auto">
                   {questionResponses.slice(-20).reverse().map((response, index) => (
@@ -1658,11 +1485,10 @@ export default function MyScoresPage() {
                           {new Date(response.timestamp).toLocaleString()}
                         </div>
                       </div>
-                      <div className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        response.isCorrect 
-                          ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' 
-                          : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
-                      }`}>
+                      <div className={`px-3 py-1 rounded-full text-sm font-medium ${response.isCorrect
+                        ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                        : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
+                        }`}>
                         {response.isCorrect ? '✓ Correct' : '✗ Incorrect'}
                       </div>
                     </div>
