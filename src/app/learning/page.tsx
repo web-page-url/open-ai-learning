@@ -40,32 +40,32 @@ export default function LearningPage() {
 
   const checkAuthentication = () => {
     setIsCheckingAuth(true);
-    
+
     try {
       const storedUserInfo = localStorage.getItem('user_info');
       const userId = localStorage.getItem('learning_user_id');
-      
+
       if (!storedUserInfo || !userId) {
         // User is not logged in, redirect to login
         router.push('/login');
         return;
       }
-      
+
       const userInfo = JSON.parse(storedUserInfo);
       setUserInfo(userInfo);
-      
+
       // Initialize session with user info
       setSession(prev => ({
         ...prev,
         participantName: userInfo.name,
         participantEmail: userInfo.email
       }));
-      
+
       setProgress(prev => ({
         ...prev,
         userId: userId
       }));
-      
+
     } catch (error) {
       console.error('Authentication check failed:', error);
       router.push('/login');
@@ -133,7 +133,7 @@ export default function LearningPage() {
 
   const getNextStep = () => {
     const { currentSection, currentPart, currentStep } = progress;
-    
+
     if (currentStep === 'warmup') {
       return { section: currentSection, part: currentPart, step: 'discussion' as const };
     } else if (currentStep === 'discussion') {
@@ -171,11 +171,11 @@ export default function LearningPage() {
 
   const getProgressPercentage = () => {
     const totalSteps = 18; // 3 sections × 2 parts × 3 steps
-    const currentStepNumber = 
-      (progress.currentSection - 1) * 6 + 
+    const currentStepNumber =
+      (progress.currentSection - 1) * 6 +
       (progress.currentPart === 'A' ? 0 : 3) +
       (progress.currentStep === 'warmup' ? 1 : progress.currentStep === 'discussion' ? 2 : 3);
-    
+
     return Math.round((currentStepNumber / totalSteps) * 100);
   };
 
@@ -237,7 +237,7 @@ export default function LearningPage() {
                 <span className="text-gray-600 dark:text-gray-300">View detailed analytics</span>
               </div>
             </div>
-            
+
             <div className="space-y-4">
               <button
                 onClick={() => router.push('/login')}
@@ -245,14 +245,14 @@ export default function LearningPage() {
               >
                 🔓 Login to Continue
               </button>
-              
+
               <button
                 onClick={() => router.push('/login')}
                 className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-200"
               >
                 👤 Create New Account
               </button>
-              
+
               <button
                 onClick={() => router.push('/')}
                 className="w-full bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
@@ -322,7 +322,7 @@ export default function LearningPage() {
                 <div className="text-sm text-gray-600 dark:text-gray-400">Certificate</div>
               </div>
             </div>
-            
+
             <div className="space-y-3 text-left mb-6">
               <h4 className="font-semibold text-gray-800 dark:text-white">What to expect:</h4>
               <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
@@ -343,6 +343,35 @@ export default function LearningPage() {
                   Final assessment and certification
                 </li>
               </ul>
+            </div>
+
+            {/* OpenAI Resources Download */}
+            <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl p-6 mb-6 border border-blue-200 dark:border-blue-800">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="text-3xl">📚</div>
+                  <div>
+                    <h4 className="font-semibold text-gray-800 dark:text-white">OpenAI Resources</h4>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                      Comprehensive guide: "OpenAI API for Developers - Dive into OpenAI API"
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    const link = document.createElement('a');
+                    link.href = '/OpenAI-API-for-Developers-Dive-into-OpenAI-API.pdf';
+                    link.download = 'OpenAI-API-for-Developers-Dive-into-OpenAI-API.pdf';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                  }}
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-2 px-4 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center gap-2"
+                >
+                  <span>📥</span>
+                  <span>Download PDF</span>
+                </button>
+              </div>
             </div>
 
             <button
@@ -431,7 +460,7 @@ export default function LearningPage() {
                 Progress: {getProgressPercentage()}%
               </div>
               <div className="w-32 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                <div 
+                <div
                   className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-300"
                   style={{ width: `${getProgressPercentage()}%` }}
                 />
@@ -481,7 +510,7 @@ export default function LearningPage() {
                       color="primary"
                     />
                   </div>
-                  
+
                   <div className="prose dark:prose-invert max-w-none">
                     <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed">
                       {(stepContent.content as DiscussionContent).content}
@@ -511,7 +540,7 @@ export default function LearningPage() {
                     color="warning"
                   />
                 </div>
-                
+
                 {/* This would cycle through quickfire questions */}
                 <div className="text-center text-gray-600 dark:text-gray-300">
                   <p>Quick Fire Round - Answer as fast as you can!</p>

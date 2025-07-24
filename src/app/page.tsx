@@ -12,7 +12,39 @@ export default function Home() {
         {/* User Greeting */}
         <UserGreeting />
         
-      
+        {/* OpenAI Resources Download */}
+        <div className="mt-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl shadow-lg p-8 text-white">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-6">
+              <div className="text-6xl">📚</div>
+              <div>
+                <h3 className="text-2xl font-bold mb-2">OpenAI Resources Guide</h3>
+                <p className="text-blue-100 text-lg">
+                  Comprehensive PDF: "OpenAI API for Developers - Dive into OpenAI API"
+                </p>
+                <p className="text-blue-200 text-sm mt-1">
+                  Essential reading material to complement your learning journey
+                </p>
+              </div>
+            </div>
+            <div className="flex-shrink-0">
+              <button
+                onClick={() => {
+                  const link = document.createElement('a');
+                  link.href = '/OpenAI-API-for-Developers-Dive-into-OpenAI-API.pdf';
+                  link.download = 'OpenAI-API-for-Developers-Dive-into-OpenAI-API.pdf';
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                }}
+                className="bg-white text-blue-600 hover:bg-blue-50 font-bold py-4 px-8 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center gap-3 text-lg"
+              >
+                <span className="text-2xl">📥</span>
+                <span>Download PDF</span>
+              </button>
+            </div>
+          </div>
+        </div>
 
         {/* Quick Stats */}
         <div className="mt-16 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8">
